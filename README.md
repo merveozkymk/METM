@@ -1,2 +1,2 @@
 # METM
-MET Management, Task Management System
+MET Management a task management system that helps companies, teams, enterpreneurs etc. manage their works and projects.
