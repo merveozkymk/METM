@@ -1,0 +1,282 @@
+body {
+    font-family: sans-serif;
+    margin: 0; 
+    background-color: #f1f1f1; 
+}
+/* navbar */
+.app-header {
+    background-color: #ffffff; 
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2); 
+    padding: 10px 20px; 
+    position: sticky;
+    top: 0; 
+    z-index: 100;
+}
+
+.navbar-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    max-width: 1300px; 
+    margin: 0 auto; 
+}
+
+.navbar-left .app-logo img {
+    height: 50px; 
+    display: block;
+}
+
+.navbar-center a {
+    text-decoration: none;
+    color: #333;
+    margin: 0 15px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar-center a:hover {
+    color: rgb(154, 97, 207);
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-dropdown {
+    position: relative; 
+    cursor: pointer; 
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.profile-picture {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    display: block;
+    margin-right: 5px; 
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5); 
+}
+.dropdown-arrow {
+    font-size: 15px; 
+    color: #555; 
+    transition: transform 0.3s ease; 
+    display: inline-block;
+}
+.user-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg); 
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px); 
+    right: 0; 
+    background-color: #ffffff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    min-width: 160px;
+    z-index: 1000;
+    display: none; 
+    padding: 10px 0;
+    list-style: none;
+    margin: 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f4f4f4;
+}
+
+.user-dropdown.open .dropdown-menu {
+    display: block;
+}
+/* dashboard */
+.dashboard-main {
+    padding: 20px; 
+    max-width: 1300px; 
+    margin: 40px auto; 
+    display: grid; 
+    grid-template-columns: 1fr 2fr;
+    gap: 60px; 
+}
+
+.add-task-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+}
+.task-list-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+}
+
+.add-task-section h2,
+.task-list-section h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 1px solid rgb(193, 163, 221); 
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block; /* Label'ı inputun üstüne al */
+    margin-bottom: 10px; /* Label ile input arasına boşluk */
+    font-weight: bold;
+    color: #555;
+}
+
+/* Tüm input alanları (text, email, password, date vb.) ve textarea */
+.input-group input:not([type="submit"]) {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc; /* Normal border rengi */
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem; /* Font boyutunu ayarla */
+    /* font-style: italic; */ /* İtalik istemiyorsak kaldır */
+}
+
+/* Input ve textarea odaklandığında */
+.input-group input:not([type="submit"]):focus {
+     outline: none; /* Varsayılan outline'ı kaldır */
+     border-color: rgb(154, 97, 207); /* Focus olduğunda border rengi */
+     box-shadow: 0 0 5px rgba(154, 97, 207, 0.5); /* Focus olduğunda hafif gölge */
+}
+
+/* Buton stilleri (Görev Ekle butonu gibi) */
+.add-task-section form button {
+    display: block; /* Tam genişlik kapla */
+    margin-top: 100px;
+    width: 100%;
+    height: 45px;
+    padding: 10px;
+    background-color: rgb(154, 97, 207);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.add-task-section form button:hover {
+    background-color: rgb(116, 73, 157);
+}
+
+
+/* --- Görev Listesi Elementleri Stillleri --- */
+
+/* Tek Görev Elementi */
+.task-item {
+    background-color: #f9f9f9;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex; /* İçeriği (bilgi ve aksiyonlar) yan yana diz */
+    justify-content: space-between; /* İçerik ve aksiyonları ayır */
+    align-items: center; /* Dikeyde ortala */
+}
+
+.task-item > div:first-child {
+    /* Görev bilgileri (başlık, açıklama, tarih, durum) için alan */
+    flex-grow: 1; /* Gerekirse boşluğu doldur */
+    margin-right: 15px; /* Aksiyon butonlarından boşluk */
+}
+
+
+.task-item h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.task-item p {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.task-item .due-date,
+.task-item .status {
+    font-size: 0.85rem;
+    color: #555;
+    margin-right: 15px;
+    display: inline-block; /* Yan yana durmaları için */
+}
+
+.task-item .task-actions button {
+    /* Görev elementindeki aksiyon butonları */
+    padding: 5px 10px;
+    margin-left: 5px; /* Butonlar arasına boşluk */
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    transition: background-color 0.3s ease;
+}
+
+.task-item .task-actions .complete-button {
+    background-color: #5cb85c; /* Yeşil */
+    color: white;
+}
+.task-item .task-actions .complete-button:hover {
+    background-color: #4cae4c;
+}
+.task-item .task-actions .delete-button {
+    background-color: #d9534f; /* Kırmızı */
+    color: white;
+}
+.task-item .task-actions .delete-button:hover {
+     background-color: #c9302c;
+}
+
+/* Görev tamamlandığında farklı stil */
+.task-item.completed {
+    background-color: #e0ffe0; /* Çok açık yeşil */
+    border-color: #c3e6cb;
+}
+
+.task-item.completed h3 {
+    text-decoration: line-through; /* Üzerini çiz */
+    color: #888;
+}
+
+
+/* Kayıt olma linki stili (Bu stil sadece auth sayfalarına özgü olabilir, dashboard'da genelde olmaz) */
+/* Yine de isterseniz tutabilirsiniz, dashboard'da signup-link sınıfını kullanırsanız çalışır */
+.signup-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+    text-align: center; /* Kendi içinde ortala */
+}
+
+.signup-link a {
+    color: rgb(154, 97, 207);
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
