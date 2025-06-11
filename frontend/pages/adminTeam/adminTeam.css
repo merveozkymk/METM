@@ -1,0 +1,309 @@
+/* frontend/pages/adminTeam/adminTeam.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.app-header {
+    background-color: #ffffff; 
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2); 
+    padding: 10px 20px; 
+    position: sticky;
+    top: 0; 
+    z-index: 100;
+}
+.navbar-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    max-width: 1300px; 
+    margin: 0 auto; 
+}
+
+.navbar-left .app-logo img {
+    height: 50px; 
+    display: block;
+}
+
+.navbar-center a {
+    text-decoration: none;
+    color: #333;
+    margin: 0 15px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar-center a:hover {
+    color: rgb(154, 97, 207);
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-dropdown {
+    position: relative; 
+    cursor: pointer; 
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.profile-picture {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    display: block;
+    margin-right: 5px; 
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5); 
+}
+.dropdown-arrow {
+    font-size: 15px; 
+    color: #555; 
+    transition: transform 0.3s ease; 
+    display: inline-block;
+}
+.user-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg); 
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px); 
+    right: 0; 
+    background-color: #ffffff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    min-width: 160px;
+    z-index: 1000;
+    display: none; 
+    padding: 10px 0;
+    list-style: none;
+    margin: 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f4f4f4;
+}
+
+.user-dropdown.open .dropdown-menu {
+    display: block;
+}
+
+.content-wrapper {
+    display: flex;
+    padding: 20px;
+    gap: 200px; /* Sidebar ve ana içerik arası boşluk */
+    min-height: 600px; /* Header yüksekliğine göre ayarlanabilir */
+    max-width: 1300px;
+    padding-inline: 190px;
+    margin-top: 40px;
+    
+}
+
+.sidebar {
+    flex: 0 0 400px; /* Sabit genişlik */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 30px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
+
+.sidebar h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.user-list {
+    
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.user-list p {
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.user-list-header {
+    background-color: rgb(154, 97, 207);
+    height: 25px;
+    padding-bottom: 20px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 30px;
+
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9em;
+    color: #444;
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+
+/* Main content alanının stilleri */
+.container.team-management-container {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 30px;
+     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.team-management-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* --- Yeni Eklenecek CSS Kuralları: Takıma Kullanıcı Ekleme Formu --- */
+
+.add-user-to-team {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.user-add-form {
+    display: flex;
+    gap: 10px; /* Input ve buton arasına boşluk */
+    align-items: center;
+    flex-wrap: wrap; /* Küçük ekranlarda alt alta geçmesini sağlar */
+}
+
+.user-add-form input[type="text"] {
+    flex: 1; /* Mevcut alanı doldurmaya çalışır */
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    min-width: 200px; /* Giriş alanının minimum genişliği */
+}
+
+.user-add-form button {
+    background-color: rgb(154, 97, 207); /* Mor */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap; /* Buton metninin tek satırda kalmasını sağlar */
+}
+
+.user-add-form button:hover {
+    background-color: rgb(130, 75, 180); /* Daha koyu mor */
+    transform: translateY(-1px); /* Hafif yukarı kayma efekti */
+}
+
+.user-add-form button:active {
+    transform: translateY(0);
+}
+
+#addStatusMessage {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.95em;
+    text-align: center;
+    /* Renkler JS tarafından ayarlanacaktır, bu yüzden burada varsayılan bir renk vermiyoruz */
+    color: #333; /* Varsayılan metin rengi */
+    background-color: #e9ecef; /* Varsayılan arka plan rengi */
+    border: 1px solid #d6d8db;
+    opacity: 0; /* Başlangıçta gizli */
+    max-height: 0; /* Başlangıçta yüksekliği sıfır */
+    overflow: hidden; /* Taşmayı gizle */
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+/* Durum mesajının görünür hale gelmesi için JS'den eklenecek bir sınıf */
+#addStatusMessage.show {
+    opacity: 1;
+    max-height: 100px; /* Mesajın yüksekliğine göre ayarla */
+    padding: 10px 15px;
+}
+
+
+
+/* Mevcut ve artık kullanılmayacak olanlar için notlar */
+/* Bu sınıflar yeni HTML'de bulunmadığı için yorum satırı olarak bırakılabilir veya silinebilir: */
+/*
+.add-user-to-team .user-list {
+    border: 1px dashed #ccc; 
+    padding: 15px;
+    min-height: 150px;
+}
+
+.unassigned-user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.unassigned-user-item:last-child {
+    border-bottom: none;
+}
+
+.unassigned-user-item span {
+    font-size: 0.95em;
+    color: #333;
+}
+
+.add-to-team-btn { 
+    background-color: #28a745; 
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: background-color 0.2s ease;
+}
+
+.add-to-team-btn:hover {
+    background-color: #218838;
+}
+*/

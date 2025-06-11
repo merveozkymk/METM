@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Takım Yönetimi</title>
+    <link rel="stylesheet" href="adminTeam.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a href="#" class="app-logo">
+                    <img src="../../assets/images/logo2.png" alt="Task Manager Logo">
+                </a>
+            </div>
+            <nav class="navbar-center">
+                <a href="#" id="teamNavLink">Takım</a>
+                <a href="#" id="assignTaskNavLink">Görev Ata</a>
+            </nav>
+            <div class="navbar-right">
+                <div class="user-dropdown">
+                    <img src="../../assets/images/defaultAvatar.jpg" alt="Profil Resmi" class="profile-picture">
+                    <span class="dropdown-arrow">▼</span>
+                    <div class="dropdown-menu">
+                        <a href="#">Hesap Ayarları</a>
+                        <a href="#">Profilim</a>
+                        <a href="#" class="logout-link" id="logoutLink">Çıkış Yap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-wrapper">
+        <aside class="sidebar">
+            <div class="users-section">
+                <h3>Takımım</h3>
+                <div id="currentGroupMembers" class="user-list">
+                    <div class="user-list-header"><h4>Takım Yöneticileri</h4></div>
+                    <p style="padding: 10px; text-align: center; color: #555;">Yöneticiler yükleniyor...</p> 
+                    <div id="adminUsers"></div>
+                    <div class="user-list-header"><h4>Takım Üyeleri</h4></div>
+                    <p style="padding: 10px; text-align: center; color: #555;">Üyeler yükleniyor...</p> 
+                    <div id="regularUsers"></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="container team-management-container">
+            <h2>Takıma Kullanıcı Ekle</h2>
+            <div class="add-user-to-team">
+                <div class="user-add-form">
+                    <input type="text" id="usernameToAddInput" placeholder="Eklenecek kullanıcının adı veya e-postası">
+                    <button id="addUserToTeamBtn">Takıma Ekle</button>
+                    <div id="addStatusMessage" style="margin-top: 10px; font-weight: bold;">
+                        </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="adminTeam.js"></script>
+</body>
+</html>
