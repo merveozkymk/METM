@@ -188,9 +188,9 @@ body {
 .task-item {
     background-color: #f9f9f9;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
-    border: 1px solid #eee;
+    border: 1px solid #eeeeee;
     padding: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
     border-radius: 4px;
     display: flex; /* İçeriği (bilgi ve aksiyonlar) yan yana diz */
     justify-content: space-between; /* İçerik ve aksiyonları ayır */
@@ -230,7 +230,7 @@ body {
     margin-left: 5px; /* Butonlar arasına boşluk */
     cursor: pointer;
     border: none;
-    border-radius: 3px;
+    border-radius: 8px;
     font-size: 0.8rem;
     transition: background-color 0.3s ease;
 }
