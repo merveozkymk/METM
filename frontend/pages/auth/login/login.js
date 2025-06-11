@@ -128,7 +128,13 @@ document.addEventListener('DOMContentLoaded', function() {
                      // Kullanıcıyı dashboard sayfasına yönlendir.
                     // Dashboard sayfanızın doğru URL'sini buraya yazın.
                     // Örneğin: '/dashboard/index.html'
-                    window.location.href = '../../dashboard/index.html';
+                    if (successData.user && successData.user.role === 'admin') {
+                        console.log('Admin rolünde kullanıcı, adminTasks sayfasına yönlendiriliyor.');
+                        window.location.href = '../../adminTeam/index.html'; // Admin için özel sayfa
+                    }else {
+                        console.log('Normal kullanıcı, tasks sayfasına yönlendiriliyor.');
+                        window.location.href = '../../tasks/index.html'; // Normal kullanıcı için sayfa
+                    }
 
                     // Başarı mesajı göstermek isterseniz (yönlendirme genellikle hemen olur, o yüzden çok görünmeyebilir)
                     // displayMessage('Giriş başarılı!', false); // false ile yeşil gösterir

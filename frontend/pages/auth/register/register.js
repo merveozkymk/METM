@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
     // Mesajları göstereceğimiz HTML elementini seçiyoruz (HTML'de eklenmeli)
-    const errorMessageDiv = document.getElementById('errorMessage');
+    const errorMessageDiv = document.getElementById('errorMessage'); // HTML'de bu div'in ID'sinin 'errorMessage' olduğundan emin olun
 
     // Kullanıcıya hata veya başarı mesajı göstermek için yardımcı fonksiyon
     function displayMessage(message, isError = true) {
@@ -60,18 +60,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Doğrulama başarısız, fonksiyonu burada durdur
             }
             // Basit e-posta format kontrolü (@ ve . içeriyor mu) - daha gelişmiş regex kullanılabilir
-            if (!email.includes('@') || !email.includes('.')) {
+             if (!email.includes('@') || !email.includes('.')) {
                  displayMessage('Lütfen geçerli bir e-posta adresi girin.');
                  return; // Doğrulama başarısız, fonksiyonu burada durdur
-            }
+             }
             if (!password) {
                 displayMessage('Lütfen bir şifre belirleyin.');
                 return; // Doğrulama başarısız, fonksiyonu burada durdur
             }
-            if (!confirmPassword) {
+             if (!confirmPassword) {
                  displayMessage('Lütfen şifrenizi tekrar girin.');
                  return; // Doğrulama başarısız, fonksiyonu burada durdur
-            }
+             }
             // **En Önemlisi: Şifre ve Şifre Tekrar alanlarının değerlerinin BİRBİRİYLE EŞLEŞTİĞİNİ KONTROL ETMEK.**
             if (password !== confirmPassword) {
                 displayMessage('Şifreler eşleşmiyor. Lütfen tekrar kontrol edin.');
@@ -81,10 +81,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Doğrulama başarısız, fonksiyonu burada durdur
             }
             // İsteğe bağlı: Parola gücü kontrolü (minimum uzunluk, karakter türleri vb.) eklenebilir
-            if (password.length < 6) { // Örnek: Minimum 6 karakter uzunluğu
+             if (password.length < 6) { // Örnek: Minimum 6 karakter uzunluğu
                  displayMessage('Şifre en az 6 karakter olmalıdır.');
                  return; // Doğrulama başarısız, fonksiyonu burada durdur
-            }
+             }
             // --- İstemci Tarafı Doğrulama Sonu ---
 
             // Buraya bir yükleme göstergesi (spinner gibi) ekleyebilirsiniz.
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         errorMessage = errorData.message || errorMessage;
                     } catch (e) {
                         // Eğer backend JSON formatında bir hata body'si döndürmezse (örn: sadece 500 status kodu ve boş body)
-                        console.error('Backend hata cevabını JSON olarak okunamadı:', e);
+                        console.error('Backend hata cevabını JSON olarak okunamadı veya parse hatası:', e);
                         // Genel bir sunucu hatası mesajı göster.
                         errorMessage = `Sunucu hatası (${response.status}). Lütfen daha sonra tekrar deneyin.`;
                     }
@@ -128,30 +128,30 @@ document.addEventListener('DOMContentLoaded', function() {
                     displayMessage(errorMessage);
 
                     // İsteğe bağlı: Hata durumunda şifre alanlarını tekrar temizle.
-                    passwordInput.value = '';
-                    confirmPasswordInput.value = '';
+                     passwordInput.value = '';
+                     confirmPasswordInput.value = '';
 
                 } else { // Eğer HTTP status kodu 2xx aralığında ise (Backend işlemi başarılı)
                     // Backend'den gelen başarılı cevabı oku (genellikle JSON formatında { message: "...", userId: ... } gibi).
-                    const successData = await response.json();
+                    const successData = await response.json(); // Backend başarılı cevap dönerse JSON bekler
                     console.log('Kayıt Başarılı:', successData);
 
-                    // --- 5. Başarılı Kayıt Sonrası Kullanıcıya Bilgi Verme ve Yönlendirme ---
+                    // --- 5. Başarılı Kayıt Sonrası Kullanıcıya Bilgi Verme ve Sayfayı Yenileme ---
                     // Kullanıcıya kayıt işleminin başarılı olduğunu belirten yeşil bir mesaj göster.
-                    displayMessage('Kayıt başarılı! Şimdi giriş yapabilirsiniz.', false); // İkinci parametre false olduğu için renk yeşil olur
+                    // Mesajı kullanıcının isteği doğrultusunda basitleştirdik.
+                    displayMessage('Kayıt başarılı!', false); // İkinci parametre false olduğu için renk yeşil olur
 
-                    // Genellikle başarılı kayıttan sonra kullanıcı giriş sayfasına yönlendirilir.
+                    // Verilen süre sonra kayıt sayfasını yenile.
                     // Kullanıcının mesajı görmesi için kısa bir bekleme süresi ekleyebiliriz (örn: 2 saniye).
                     setTimeout(() => {
-                        // Login sayfanızın doğru URL'sini buraya yazın.
-                        // Örneğin: '/auth/login/index.html'
-                         window.location.href = '/auth/login/index.html';
-                    }, 2000); // 2000 milisaniye (2 saniye) sonra yönlendir
+                        // Mevcut sayfayı yenile
+                        window.location.reload();
+                    }, 50000000000000000000); // 2000 milisaniye (2 saniye) sonra yenile
 
                 }
 
             } catch (error) {
-                // fetch isteğinin kendisi sırasında bir hata oluşursa (örn: ağ bağlantısı yok, backend adresi yanlış)
+                // fetch isteğinin kendisi sırasında bir hata oluşursa (örn: ağ bağlantısı yok, backend adresi yanlış, CORS hatası)
                 console.error('Kayıt işlemi sırasında beklenmeyen bir hata oluştu:', error);
                 // Kullanıcıya genel bir hata mesajı göster.
                 displayMessage('Kayıt yapılırken bir hata oluştu. Lütfen internet bağlantınızı kontrol edin veya daha sonra tekrar deneyin.');
