@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - görevler</title>
+    <link rel="stylesheet" href="tasks.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a href="#" class="app-logo">
+                    <img src="../../assets/images/logo2.png" alt="Task Manager Logo">
+                </a>
+            </div>
+            <nav class="navbar-center">
+                <a href="#">Görevlerim</a>
+                <a href="#">Görev ekle</a>
+            </nav>
+             <div class="navbar-right">
+                <div class="user-dropdown">
+                    <img src="../../assets/images/defaultAvatar.jpg" alt="Profil Resmi" class="profile-picture">
+                    <span class="dropdown-arrow">▼</span>
+                    <div class="dropdown-menu">
+                        <a href="#">Hesap Ayarları</a>
+                        <a href="#">Profilim</a>
+                        <a href="#" id="logoutLink" class="logout-link">Çıkış Yap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-wrapper">
+        <aside class="sidebar">
+            <div class="users-section">
+                <h3>Takımım</h3>
+                <div id="adminUsersList" class="user-list">
+            
+                    <div class="user-list1"><h4>Takım Yöneticileri</h4></div>
+                    
+                    <p>Admin kullanıcıları yükleniyor...</p>
+                </div>
+                <div id="regularUsersList" class="user-list">
+                    <div class="user-list1"><h4>Takım Üyeleri</h4></div>
+                    <p>Normal kullanıcılar yükleniyor...</p>
+                </div>
+            </div>
+        </aside>
+    <main class="container">
+            <h2>Tamamlanmamış Görevlerim</h2>
+
+            <div id="incompleteTaskList">
+                <p>Tamamlanmamış görevler yükleniyor...</p>
+            </div>
+
+        </main>
+    </div> <script src="tasks.js"></script>
+</body>
+</html>
