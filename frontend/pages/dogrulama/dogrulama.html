@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>MET Management - Doğrulama</title>
+  <style>
+    body {
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .btn {
+      background-color: #007bff;
+      color: white;
+      padding: 14px 28px;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    .success {
+      font-size: 18px;
+      color: green;
+      margin-top: 30px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Merhaba,</h2>
+    <p>MET Management platformuna kaydolduğunuz için teşekkür ederiz.</p>
+    <p>Lütfen hesabınızı doğrulamak için aşağıdaki butona tıklayın:</p>
+
+    <a href="#" class="btn" onclick="confirmEmail(event)">Hesabımı Doğrula</a>
+
+    <p id="successMsg" class="success">✅ Hesabınız başarıyla doğrulandı!</p>
+  </div>
+
+  <script>
+    function confirmEmail(event) {
+      event.preventDefault(); // sayfa yenilenmesin
+      document.querySelector(".btn").style.display = "none"; // butonu gizle
+      document.getElementById("successMsg").style.display = "block"; // mesajı göster
+    }
+  </script>
+</body>
+</html>
