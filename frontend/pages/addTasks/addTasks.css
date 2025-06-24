@@ -257,18 +257,16 @@ body {
 }
 
 .task-item.completed h3 {
-    text-decoration: line-through; /* Üzerini çiz */
+    text-decoration: line-through; 
     color: #888;
 }
 
 
-/* Kayıt olma linki stili (Bu stil sadece auth sayfalarına özgü olabilir, dashboard'da genelde olmaz) */
-/* Yine de isterseniz tutabilirsiniz, dashboard'da signup-link sınıfını kullanırsanız çalışır */
 .signup-link {
     margin-top: 20px;
     font-size: 14px;
     color: #555;
-    text-align: center; /* Kendi içinde ortala */
+    text-align: center;
 }
 
 .signup-link a {

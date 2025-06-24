@@ -1,5 +1,3 @@
-// frontend/pages/adminTeam/adminTeam.js
-
 document.addEventListener('DOMContentLoaded', async () => {
     const currentGroupMembersList = document.getElementById('currentGroupMembers');
     const logoutLink = document.getElementById('logoutLink');
@@ -7,11 +5,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const addUserToTeamBtn = document.getElementById('addUserToTeamBtn'); 
     const addStatusMessage = document.getElementById('addStatusMessage'); 
 
-    // Yeni eklenen navbar bağlantıları için elementleri al
-    const teamNavLink = document.getElementById('teamNavLink'); // Takım bağlantısı
-    const assignTaskNavLink = document.getElementById('assignTaskNavLink'); // Görev Ata bağlantısı
+    const teamNavLink = document.getElementById('teamNavLink');  
+    const assignTaskNavLink = document.getElementById('assignTaskNavLink'); 
 
-    // Kullanıcı dropdown menüsü işlevselliği
     const userDropdown = document.querySelector('.user-dropdown');
     if (userDropdown) {
         userDropdown.addEventListener('click', function(event) {
@@ -26,7 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Kullanıcının kimlik bilgilerini ve token'ı localStorage'dan al
     const currentUser = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('authToken'); 
 
@@ -42,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return; 
     }
     
-    // Çıkış yap linkine tıklama olayı
     if (logoutLink) {
         logoutLink.addEventListener('click', (e) => {
             e.preventDefault();
@@ -52,21 +46,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // --- Yeni Navigasyon Linkleri Olay Dinleyicileri ---
     if (teamNavLink) {
         teamNavLink.addEventListener('click', (e) => {
-            e.preventDefault(); // Varsayılan link davranışını engelle
-            window.location.href = '../adminTeam/index.html'; // adminTeam sayfasına yönlendir
+            e.preventDefault(); 
+            window.location.href = '../adminTeam/index.html'; 
         });
     }
 
     if (assignTaskNavLink) {
         assignTaskNavLink.addEventListener('click', (e) => {
-            e.preventDefault(); // Varsayılan link davranışını engelle
-            window.location.href = '../adminTasks/index.html'; // adminTasks sayfasına yönlendir
+            e.preventDefault(); 
+            window.location.href = '../adminTasks/index.html'; 
         });
     }
-    // --- Navigasyon Linkleri Olay Dinleyicileri Sonu ---
 
     /**
      * API'ye güvenli bir şekilde veri çekme/gönderme fonksiyonu.
@@ -117,9 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    /**
-     * Giriş yapmış admin kullanıcının kendi grubundaki üyeleri backend'den çeker ve listeler.
-     */
+  
     async function fetchCurrentGroupMembers() {
         currentGroupMembersList.innerHTML = `
             <div class="user-list-header"><h4>Takım Yöneticileri</h4></div>
@@ -178,13 +168,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    /**
-     * Kullanıcının girdiği kullanıcı adını/e-postasını kullanarak takımsız bir kullanıcıyı bulur ve takıma atar.
-     */
+  
     async function handleAddUserToTeamByUsername() {
         const identifier = usernameToAddInput.value.trim(); 
         addStatusMessage.textContent = ''; 
-        addStatusMessage.classList.remove('show'); // Mesajı gizle
+        addStatusMessage.classList.remove('show'); 
 
         if (!identifier) {
             addStatusMessage.textContent = 'Lütfen eklenecek kullanıcının adını veya e-postasını girin.';
@@ -253,17 +241,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             addStatusMessage.style.color = 'red';
             addStatusMessage.classList.add('show');
         } finally {
-            // Mesajı belli bir süre sonra gizle
             setTimeout(() => {
                 addStatusMessage.classList.remove('show');
                 addStatusMessage.textContent = '';
-            }, 5000); // 5 saniye sonra gizle
+            }, 5000); 
         }
     }
 
-    // Olay dinleyicileri
     addUserToTeamBtn.addEventListener('click', handleAddUserToTeamByUsername);
 
-    // Sayfa yüklendiğinde mevcut takım üyelerini getir
     fetchCurrentGroupMembers();
 });

@@ -1,13 +1,9 @@
-// backend/database.js
-// SQLite veritabanı bağlantısını kurar ve gerekli tabloları oluşturur.
-
 const sqlite3 = require('sqlite3').verbose();
-const bcrypt = require('bcryptjs'); // Opsiyonel: test kullanıcı eklemek isterseniz
+const bcrypt = require('bcryptjs'); 
 
-// Veritabanı dosyamızın adı. Backend klasörünüzde oluşacaktır.
+// Veritabanı dosyamızın adı. 
 const dbFile = './taskmanager.sqlite';
 
-// Veritabanı bağlantısını açar veya belirtilen isimde bir dosya yoksa yeni bir dosya oluşturur.
 const db = new sqlite3.Database(dbFile, (err) => {
     if (err) {
         console.error("Veritabanı bağlantı hatası:", err.message);
@@ -16,7 +12,6 @@ const db = new sqlite3.Database(dbFile, (err) => {
     console.log('SQLite veritabanına başarıyla bağlanıldı.');
 
     db.serialize(() => {
-        // --- Gruplar Tablosunu Oluşturma ---
         const createGroupsTable = `
             CREATE TABLE IF NOT EXISTS groups (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +25,7 @@ const db = new sqlite3.Database(dbFile, (err) => {
                 console.error("Gruplar tablosu oluşturulurken hata:", err.message);
             } else {
                 console.log('Gruplar tablosu hazır.');
-                // Varsayılan bir grup ekle
+                
                 const insertDefaultGroup = 'INSERT OR IGNORE INTO groups (id, name, description) VALUES (?, ?, ?)';
                 db.run(insertDefaultGroup, [1, 'Default Group', 'Varsayılan kullanıcı grubu'], function(err) {
                     if (err) {
@@ -42,7 +37,7 @@ const db = new sqlite3.Database(dbFile, (err) => {
             }
         });
 
-        // --- Kullanıcılar Tablosunu Oluşturma ---
+        
         const createUsersTable = `
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,7 +58,7 @@ const db = new sqlite3.Database(dbFile, (err) => {
             }
         });
 
-        // --- Görevler Tablosunu Oluşturma (GÜNCEL VE DÜZGÜN HALİ) ---
+        
         const createTasksTable = `
             CREATE TABLE IF NOT EXISTS tasks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -88,7 +83,7 @@ const db = new sqlite3.Database(dbFile, (err) => {
             }
         });
 
-    }); // db.serialize sonu
-}); // new sqlite3.Database sonu callback'i
+    }); 
+}); 
 
 module.exports = db;

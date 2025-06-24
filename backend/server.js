@@ -1,44 +1,27 @@
-// backend/server.js
-// Express backend sunucu uygulamasının ana kod dosyası.
-
-// Gerekli Node.js modüllerini ve kendi dosyalarımızı içe aktarıyoruz.
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const db = require('./database'); // Veritabanı bağlantımız
+const db = require('./database'); 
 const cors = require('cors');
-const authenticateToken = require('./middleware/auth'); // Kimlik doğrulama middleware'imiz
+const authenticateToken = require('./middleware/auth'); 
 
-// Express uygulamasını başlatıyoruz.
 const app = express();
 
-// Sunucunun çalışacağı portu belirleriz. Ortam değişkenlerinden almayı dener, yoksa 3000 kullanır.
 const PORT = process.env.PORT || 3000;
 
-// JSON Web Token (JWT) imzalamak ve doğrulamak için kullanılacak GİZLİ anahtar.
-// auth.js dosyasındaki anahtarla AYNI olmalı ve ÇOK GİZLİ tutulmalıdır!
-// GERÇEK UYGULAMADA ASLA KODUN İÇİNDE OLMAZ! Güvenli bir şekilde ortam değişkeninden (.env dosyası gibi) alınmalıdır.
-const JWT_SECRET = process.env.JWT_SECRET || 'cokgizlibirvarsayilangizlianahtar'; // Lütfen bunu daha karmaşık ve güvenli bir değerle değiştirin!
+const JWT_SECRET = process.env.JWT_SECRET || 'cokgizlibirvarsayilangizlianahtar'; 
 
-// --- Middleware'ler ---
-
-// Gelen isteklerdeki Body kısmında JSON formatında veri varsa, bunu parse eder ve req.body objesine ekler.
 app.use(express.json());
 
-// Frontend ve backend farklı domain/portlarda çalıştığında tarayıcıların CORS politikası nedeniyle
-// isteklerin engellenmesini önlemek için CORS middleware'ini kullanırız.
-// 'origin' kısmını kendi frontend uygulamanızın (Live Server veya deploy edilen adres) URL'i ile DEĞİŞTİRMELİSİNİZ.
 app.use(cors({
-    origin: ['http://127.0.0.1:5500', 'http://127.0.0.1:5501'], // Örnek: VS Code Live Server'ın varsayılan adresi. KENDİ ADRESİNİZİ YAZIN!
-    credentials: true // Eğer çerezler veya yetkilendirme başlıkları (JWT gibi) gönderecekseniz bu true olmalı.
+    origin: ['http://127.0.0.1:5500', 'http://127.0.0.1:5501'], 
+    credentials: true 
 }));
 
-// --- API Endpoint Tanımları ---
 
-// Kayıt (Register) Endpointi: Yeni kullanıcı kaydı için POST isteği beklenir.
-// URL: /api/auth/register
-// Bu endpoint yetkilendirme gerektirmez (kullanıcı henüz kayıtlı değil).
+
+// Register Endpointi: Yeni kullanıcı kaydı için POST isteği beklenir.
 app.post('/api/auth/register', (req, res) => {
     const { username, email, password, group_id } = req.body;
 
@@ -52,7 +35,7 @@ app.post('/api/auth/register', (req, res) => {
             return res.status(500).json({ message: 'Kayıt sırasında beklenmeyen bir hata oluştu.' });
         }
 
-        const finalGroupId = group_id || 1; // Frontend'den gelmiyorsa varsayılan 1
+        const finalGroupId = group_id || 1; 
 
         const insertUser = 'INSERT INTO users (username, email, password_hash, group_id) VALUES (?, ?, ?, ?)';
 
@@ -65,21 +48,21 @@ app.post('/api/auth/register', (req, res) => {
                 return res.status(500).json({ message: 'Kullanıcı kaydedilirken bir hata oluştu.' });
             }
 
-            const userId = this.lastID; // Yeni eklenen kullanıcının ID'si
+            const userId = this.lastID; 
 
-            // Otomatik görev atama için gerekli bilgileri hazırlayın
+            
             const defaultTaskTitle = 'İlk Göreviniz';
             const defaultTaskDescription = 'Bu, hesabınız oluşturulduğunda size otomatik olarak atanan ilk görevdir.';
             
-            const createdByValue = userId; // Görevi atayan ve oluşturana aynı ID'yi verelim
-            const groupIdValue = finalGroupId; // Kullanıcının atandığı grup ID'si
+            const createdByValue = userId; 
+            const groupIdValue = finalGroupId; 
 
             const insertTaskQuery = 'INSERT INTO tasks (title, description, user_id, created_by, group_id) VALUES (?, ?, ?, ?, ?)';
 
             db.run(insertTaskQuery, [defaultTaskTitle, defaultTaskDescription, userId, createdByValue, groupIdValue], function(taskErr) {
                 if (taskErr) {
                     console.error("Otomatik görev atama hatası:", taskErr.message);
-                    // Görev ataması başarısız olsa bile kullanıcı kaydının başarılı olduğunu varsayıyoruz.
+                   
                 } else {
                     console.log(`Yeni kullanıcı (ID: ${userId}) için otomatik görev "${defaultTaskTitle}" başarıyla atandı.`);
                 }
@@ -93,8 +76,7 @@ app.post('/api/auth/register', (req, res) => {
     });
 });
 
-// Giriş (Login) Endpointi: Kullanıcı girişi için POST isteği beklenir.
-// URL: /api/auth/login
+// Login Endpointi: Kullanıcı girişi için POST isteği beklenir.
 app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
 
@@ -148,11 +130,11 @@ app.post('/api/auth/login', (req, res) => {
     });
 });
 
-// --- AUTH Endpointleri Sonu ---
 
 
-// --- Görev (Task) Endpointleri ---
-app.use('/api/tasks', authenticateToken); // Tüm task endpoint'leri için kimlik doğrulama middleware'i
+
+
+app.use('/api/tasks', authenticateToken);
 
 // Görevleri Çekme Endpointi: GET /api/tasks (Yetkilendirme GEREKTİRİR)
 app.get('/api/tasks', (req, res) => {
@@ -183,8 +165,6 @@ app.post('/api/tasks', (req, res) => {
 
     let targetUserId = creatorUserId; 
     
-    // Eğer frontend'den bir user_id gelmişse (ki bu admin atamasıdır)
-    // ve token sahibi admin ise, o user_id'yi kullanabiliriz.
     if (assignedUserIdFromClient && creatorUserRole === 'admin') {
         targetUserId = assignedUserIdFromClient;
     } 
@@ -275,10 +255,6 @@ app.delete('/api/tasks/:id', (req, res) => {
     });
 });
 
-// --- Görev (Task) Endpointleri Sonu ---
-
-
-// --- Kullanıcı (User) Yönetimi Endpointleri ---
 
 // Tüm kullanıcıları çekme endpointi: GET /api/users (Yetkilendirme GEREKTİRİR ve ADMIN YETKİSİ GEREKİR)
 app.get('/api/users', authenticateToken, (req, res) => {
@@ -304,7 +280,7 @@ app.get('/api/users/in-my-group', authenticateToken, (req, res) => {
     const userGroupId = req.user.group_id; 
 
     if (userGroupId === null || userGroupId === 1) { 
-        return res.status(200).json([]); // Boş dizi döndür, kullanıcı atanmamışsa
+        return res.status(200).json([]); 
     }
 
     const selectGroupUsers = 'SELECT id, username, email, role, group_id FROM users WHERE group_id = ? ORDER BY role DESC, username ASC';
@@ -320,7 +296,6 @@ app.get('/api/users/in-my-group', authenticateToken, (req, res) => {
 
 
 // YENİ ENDPOINT: Kullanıcı adı veya e-posta ile takımsız kullanıcı arama
-// Frontend'den gelen `identifier` (kullanıcı adı veya e-posta) ile `group_id = 1` olan kullanıcıları bulur.
 app.get('/api/users/find-unassigned', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Bu işlemi yapmaya yetkiniz yok.' });
@@ -332,27 +307,18 @@ app.get('/api/users/find-unassigned', authenticateToken, async (req, res) => {
         return res.status(400).json({ message: 'Kullanıcı adı veya e-posta belirtilmelidir.' });
     }
 
-    // Hem username hem de email alanında arama yapıyoruz ve group_id'si 1 olanları filtreliyoruz.
-    // ILIKE case-insensitive arama yapar.
     let query = `SELECT id, username, email, role, group_id FROM users WHERE group_id = 1 AND (username LIKE ? OR email LIKE ?) LIMIT 1`;
-    // SQLite'da PostgreSQL'deki ILIKE yerine genellikle LIKE kullanılır ve case-insensitivity için LOWER() kullanılabilir.
-    // Ancak varsayılan olarak LIKE genellikle case-insensitive'dir, bu yüzden `%` ile wild card kullanılır.
     let params = [`%${identifier}%`, `%${identifier}%`]; 
 
-    // PostgreSQL kullanılıyorsa:
-    // let query = `SELECT id, username, email, role, group_id FROM users WHERE group_id = 1 AND (username ILIKE $1 OR email ILIKE $1) LIMIT 1`;
-    // let params = [`%${identifier}%`];
-
-
     try {
-        db.all(query, params, (err, rows) => { // db.all kullanıyoruz çünkü SQLite'da db.get tek bir satır döner, ancak birden fazla eşleşme ihtimaline karşı all daha güvenli. Limit 1 ile kontrolü biz sağlarız.
+        db.all(query, params, (err, rows) => {
             if (err) {
                 console.error('Takımsız kullanıcı ararken veritabanı hatası:', err.message);
                 return res.status(500).json({ message: 'Kullanıcı ararken bir hata oluştu.' });
             }
 
             if (rows.length > 0) {
-                res.json(rows); // Bulunan kullanıcıyı döndür (dizi olarak)
+                res.json(rows); 
             } else {
                 res.status(404).json({ message: 'Belirtilen kimlikte takımsız kullanıcı bulunamadı.' });
             }
@@ -392,7 +358,6 @@ app.patch('/api/users/:id/role', authenticateToken, (req, res) => {
 });
 
 // Kullanıcının grubunu güncelleme endpoint'i (sadece adminler için)
-// Bu endpoint, frontend'den gelen bir kullanıcının ID'sini alarak grubunu günceller.
 app.patch('/api/users/:id/group', authenticateToken, (req, res) => {
     const targetUserId = req.params.id;
     const newGroupId = req.body.group_id;
@@ -406,7 +371,6 @@ app.patch('/api/users/:id/group', authenticateToken, (req, res) => {
         return res.status(400).json({ message: 'Geçersiz grup ID belirtildi. Grup ID pozitif bir tam sayı olmalı.' });
     }
 
-    // Grubu güncellemeden önce, `newGroupId`'nin geçerli bir grup ID olup olmadığını kontrol edelim.
     db.get('SELECT id FROM groups WHERE id = ?', [newGroupId], (err, group) => {
         if (err) {
             console.error("Grup kontrol hatası:", err.message);
@@ -425,7 +389,7 @@ app.patch('/api/users/:id/group', authenticateToken, (req, res) => {
             if (this.changes === 0) {
                 return res.status(404).json({ message: 'Kullanıcı bulunamadı.' });
             }
-            // Başarılı olursa güncellenen kullanıcı bilgisini de dönebiliriz.
+
             db.get('SELECT id, username, email, role, group_id FROM users WHERE id = ?', [targetUserId], (err, updatedUser) => {
                 if (err) { console.error("Güncellenen kullanıcıyı çekerken hata:", err.message); }
                 res.status(200).json({ 
@@ -437,10 +401,7 @@ app.patch('/api/users/:id/group', authenticateToken, (req, res) => {
     });
 });
 
-// --- Kullanıcı (User) Yönetimi Endpointleri Sonu ---
 
-
-// --- Grup Yönetimi Endpointleri ---
 
 // Tüm grupları listeleme (sadece adminler için)
 app.get('/api/groups', authenticateToken, (req, res) => {
@@ -492,7 +453,6 @@ app.post('/api/groups', authenticateToken, (req, res) => {
 });
 
 // Grup silme (sadece adminler için)
-// Not: Bu işlem grupla ilişkili kullanıcıları varsayılan gruba atar (ON DELETE SET DEFAULT)
 app.delete('/api/groups/:id', authenticateToken, (req, res) => {
     const groupId = req.params.id;
     const currentUserRole = req.user.role;
@@ -501,7 +461,6 @@ app.delete('/api/groups/:id', authenticateToken, (req, res) => {
         return res.status(403).json({ message: 'Bu işlemi yapmaya yetkiniz yok. Sadece yöneticiler yapabilir.' });
     }
 
-    // Varsayılan grubun (ID: 1) silinmesini engelle
     if (parseInt(groupId) === 1) {
         return res.status(400).json({ message: 'Varsayılan grup silinemez.' });
     }
@@ -521,16 +480,6 @@ app.delete('/api/groups/:id', authenticateToken, (req, res) => {
     });
 });
 
-// Eski endpoint, artık takımsız kullanıcı listesi göstermeyeceğiz. Bu nedenle bu endpoint'i kaldırabiliriz
-// veya sadece admin'ler için genel bir listeleme endpoint'i olarak bırakabiliriz.
-// Eğer bu endpoint'i tamamen kaldırıyorsanız, frontend'deki 'unassigned-users' listeleme mantığını da kaldırdığınızdan emin olun.
-// app.get('/api/users/unassigned', authenticateToken, (req, res) => { /* ... */ });
-
-
-// --- Grup Yönetimi Endpointleri Sonu ---
-
-
-// --- Hata Yakalama Middleware'leri ---
 // Eşleşmeyen tüm istekler için 404 Not Found hatası oluşturur.
 app.use((req, res, next) => {
     const error = new Error('Bulunamadı (Not Found)');
@@ -540,29 +489,25 @@ app.use((req, res, next) => {
 
 // Tüm hataları yakalayan ve yanıt dönen middleware.
 app.use((error, req, res, next) => {
-    res.status(error.status || 500); // Status kodunu belirle
+    res.status(error.status || 500); 
     res.json({
         error: {
-            message: error.message || 'Beklenmeyen bir sunucu hatası oluştu!' // Hata mesajını dön
+            message: error.message || 'Beklenmeyen bir sunucu hatası oluştu!' 
         }
     });
-    console.error(error.stack); // Hata detayını konsola yazdır
+    console.error(error.stack); 
 });
-// --- Hata Yakalama Middleware'leri Sonu ---
 
-
-// Sunucuyu belirtilen portta başlatıyoruz.
 app.listen(PORT, () => {
     console.log(`Backend sunucusu http://localhost:${PORT} adresinde çalışıyor.`);
 });
 
-// Uygulama kapatıldığında (Ctrl+C gibi) veritabanı bağlantısını düzgünce kapatırız.
 process.on('SIGINT', () => {
     db.close((err) => {
         if (err) {
             console.error('Veritabanı kapatılırken hata:', err.message);
         }
         console.log('SQLite veritabanı bağlantısı kapatıldı.');
-        process.exit(0); // Uygulamadan çıkış
+        process.exit(0); 
     });
 });

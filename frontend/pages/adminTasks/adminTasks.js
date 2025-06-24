@@ -1,61 +1,49 @@
-// frontend/pages/admin/adminAddTasks.js
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Kullanıcı dropdown menüsü işlevselliği
     const userDropdown = document.querySelector('.user-dropdown');
     if (userDropdown) {
-        // user-dropdown alanına (profil resmi ve ok dahil) tıklandığında dropdown menüsünü aç/kapat.
-        // event.stopPropagation() tıklama olayının daha üst elementlere yayılmasını engeller, böylece menüye tıklamak menüyü hemen kapatmaz.
         userDropdown.addEventListener('click', function(event) {
             event.stopPropagation();
-            userDropdown.classList.toggle('open'); // 'open' sınıfını ekleyerek/kaldırarak CSS ile menüyü gösterir/gizler.
+            userDropdown.classList.toggle('open'); 
         });
 
-        // menü dışında herhangi bir yere tıklandığında açık olan menüyü kapatır.
-        // Bu olay dinleyici document'e eklenir (Event Bubbling kullanılır).
         document.addEventListener('click', function(event) {
-            // Tıklanan elementin userDropdown içinde olup olmadığını kontrol et.
             const isClickInsideDropdown = userDropdown.contains(event.target);
-            // Eğer tıklama dropdown'ın içinde değilse VE dropdown açıksa ('open' sınıfı varsa)
             if (!isClickInsideDropdown && userDropdown.classList.contains('open')) {
-                userDropdown.classList.remove('open'); // Menüyü kapat ('open' sınıfını kaldır).
+                userDropdown.classList.remove('open'); 
             }
         });
     }
     if (teamNavLink) {
     teamNavLink.addEventListener('click', (e) => {
-        e.preventDefault(); // Varsayılan link davranışını engelle
-        window.location.href = '../adminTeam/index.html'; // adminTeam sayfasına yönlendir
+        e.preventDefault(); 
+        window.location.href = '../adminTeam/index.html'; 
     });
 }
 
 if (assignTaskNavLink) {
     assignTaskNavLink.addEventListener('click', (e) => {
-        e.preventDefault(); // Varsayılan link davranışını engelle
-        window.location.href = '../adminTasks/index.html'; // adminTasks sayfasına yönlendir
+        e.preventDefault(); 
+        window.location.href = '../adminTasks/index.html'; 
     });
 }
-    // DOMContentLoaded olduğunda çalışır
     
     const addTaskForm = document.getElementById('addTaskForm');
     const taskTitleInput = document.getElementById('taskTitle');
     const taskDescriptionInput = document.getElementById('taskDescription');
     const taskDueDateInput = document.getElementById('taskDueDate');
-    const assignedToSelect = document.getElementById('assignedTo'); // Atanacak üyeyi seçme
-    const formMessage = document.getElementById('formMessage'); // Mesaj göstermek için
+    const assignedToSelect = document.getElementById('assignedTo'); 
+    const formMessage = document.getElementById('formMessage'); 
 
-    // Yetkilendirme token'ı ve kullanıcı bilgisi
     const authToken = localStorage.getItem('authToken');
     const loggedInUserString = localStorage.getItem('user');
     let currentUser = null;
 
-    // --- Yetkilendirme ve Admin Kontrolü ---
     async function checkAuthAndAdminStatus() {
         if (!authToken || !loggedInUserString) {
             console.log('Yetkilendirme token\'ı veya kullanıcı bilgisi bulunamadı. Login sayfasına yönlendiriliyor...');
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');
-            window.location.href = '../auth/login/index.html'; // Login sayfasına yönlendir
+            window.location.href = '../auth/login/index.html'; 
             return false;
         }
 
@@ -63,12 +51,12 @@ if (assignTaskNavLink) {
             currentUser = JSON.parse(loggedInUserString);
             console.log('Admin Paneli Yüklendi. Giriş Yapılan Kullanıcı:', currentUser);
 
-            if (currentUser.role !== 'admin') { // Kullanıcı rolü 'admin' değilse
+            if (currentUser.role !== 'admin') { 
                 alert('Bu sayfaya erişim yetkiniz yok. Yönetici değilsiniz.');
-                window.location.href = '../tasks/index.html'; // Normal görev sayfasına yönlendir
+                window.location.href = '../tasks/index.html'; 
                 return false;
             }
-            return true; // Admin ve yetkili
+            return true; 
         } catch (e) {
             console.error('localStorage\'dan kullanıcı bilgisi okunurken veya parse edilirken hata oluştu:', e);
             localStorage.removeItem('authToken');
@@ -78,12 +66,12 @@ if (assignTaskNavLink) {
         }
     }
 
-    // --- Kullanıcıları (Takım Üyelerini) Çekme ve Dropdown'a Doldurma ---
+    
     async function fetchTeamMembersForDropdown() {
         if (!authToken || !currentUser) return;
 
         const backendUsersEndpoint = 'http://localhost:3000/api/users/in-my-group';
-        assignedToSelect.innerHTML = '<option value="">Yükleniyor...</option>'; // Yükleniyor mesajı
+        assignedToSelect.innerHTML = '<option value="">Yükleniyor...</option>'; 
 
         try {
             const response = await fetch(backendUsersEndpoint, {
@@ -99,20 +87,19 @@ if (assignTaskNavLink) {
             }
 
             const users = await response.json();
-            assignedToSelect.innerHTML = '<option value="">Üye Seçiniz</option>'; // İlk boş opsiyon
+            assignedToSelect.innerHTML = '<option value="">Üye Seçiniz</option>';
 
-            // Sadece kendi grubundaki normal kullanıcıları (admin olmayanları) listele
             const teamMembers = users.filter(user => user.group_id === currentUser.group_id && user.role !== 'admin');
 
             if (teamMembers.length === 0) {
                 assignedToSelect.innerHTML = '<option value="">Takımınızda atanabilir üye yok.</option>';
-                assignedToSelect.disabled = true; // Dropdown'u devre dışı bırak
+                assignedToSelect.disabled = true; 
                 return;
             }
 
             teamMembers.forEach(user => {
                 const option = document.createElement('option');
-                option.value = user.id; // Kullanıcı ID'si
+                option.value = user.id; 
                 option.textContent = `${user.username} (${user.email})`;
                 assignedToSelect.appendChild(option);
             });
@@ -125,14 +112,13 @@ if (assignTaskNavLink) {
         }
     }
 
-    // --- Görev Atama Formu Gönderme İşlevi ---
     addTaskForm.addEventListener('submit', async function(event) {
-        event.preventDefault(); // Varsayılan formu gönderme davranışını engelle
+        event.preventDefault(); 
 
         const title = taskTitleInput.value.trim();
         const description = taskDescriptionInput.value.trim();
         const dueDate = taskDueDateInput.value;
-        const selectedUserId = assignedToSelect.value; // Dropdown'dan seçilen kullanıcının ID'si
+        const selectedUserId = assignedToSelect.value; 
 
         if (!title || !selectedUserId) {
             showMessage('Lütfen görev başlığını girin ve bir üye seçin.', 'error');
@@ -145,17 +131,16 @@ if (assignTaskNavLink) {
             return;
         }
 
-        // Gönderilecek görev verisi (user_id kullanılarak)
         const taskData = {
             title: title,
-            description: description || null, // Boşsa null gönder
-            due_date: dueDate || null, // Boşsa null gönder
-            user_id: parseInt(selectedUserId), // BURASI DEĞİŞTİ: assigned_to yerine user_id kullanıyoruz
-            created_by: currentUser.id, // Görevi oluşturan adminin ID'si
-            group_id: currentUser.group_id // Görevin ait olduğu grup ID'si
+            description: description || null, 
+            due_date: dueDate || null, 
+            user_id: parseInt(selectedUserId), 
+            created_by: currentUser.id, 
+            group_id: currentUser.group_id
         };
 
-        const backendTasksEndpoint = 'http://localhost:3000/api/tasks'; // Backend'in görev ekleme endpoint'i
+        const backendTasksEndpoint = 'http://localhost:3000/api/tasks'; 
 
         try {
             const response = await fetch(backendTasksEndpoint, {
@@ -182,26 +167,24 @@ if (assignTaskNavLink) {
             const newTask = await response.json();
             console.log('Yeni görev başarıyla atandı:', newTask);
             showMessage('Görev başarıyla atandı!', 'success');
-            addTaskForm.reset(); // Formu temizle
-            taskDescriptionInput.value = ''; // Textarea'yı da temizle
-            assignedToSelect.value = ''; // Seçimi sıfırla
+            addTaskForm.reset(); 
+            taskDescriptionInput.value = ''; 
+            assignedToSelect.value = ''; 
         } catch (error) {
             console.error('Görev atarken bir hata oluştu:', error);
             showMessage(`Görev atanamadı: ${error.message}`, 'error');
         }
     });
 
-    // --- Mesaj Gösterme Fonksiyonu ---
     function showMessage(message, type) {
         formMessage.textContent = message;
-        formMessage.className = `message ${type}`; // 'success' veya 'error' sınıfını ekler
+        formMessage.className = `message ${type}`; 
         setTimeout(() => {
             formMessage.textContent = '';
             formMessage.className = 'message';
-        }, 3000); // 3 saniye sonra mesajı temizle
+        }, 3000); 
     }
 
-    // --- Navbar Linkleri ve Çıkış Yap ---
     const gorevlerimLink = document.querySelector('nav a[href="../tasks/index.html"]');
     if (gorevlerimLink) {
         gorevlerimLink.addEventListener('click', function(event) {
@@ -218,12 +201,11 @@ if (assignTaskNavLink) {
         });
     }
     
-    // Logo linkini de güncelleyelim, genellikle anasayfaya veya dashboard'a gider
     const appLogo = document.querySelector('.app-logo');
     if (appLogo) {
         appLogo.addEventListener('click', function(event) {
             event.preventDefault();
-            window.location.href = '../tasks/index.html'; // Varsayılan dashboard
+            window.location.href = '../tasks/index.html'; 
         });
     }
 
@@ -238,13 +220,12 @@ if (assignTaskNavLink) {
         });
     }
 
-    // Sayfa yüklendiğinde çalışacak ilk fonksiyonlar
     async function initPage() {
         const isAdmin = await checkAuthAndAdminStatus();
         if (isAdmin) {
-            await fetchTeamMembersForDropdown(); // Sadece admin ise üyeleri çek
+            await fetchTeamMembersForDropdown(); 
         }
     }
 
-    initPage(); // Sayfa başlangıcını tetikle
+    initPage(); 
 });
