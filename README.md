@@ -36,7 +36,7 @@ METM, kullanıcıların görevlerini kolayca yönetebileceği, oluşturabileceğ
 - Ana sayfada mevcut görevlerinizi görebilir  
 - Yeni görev ekleyebilir, var olanları düzenleyebilir veya silebilirsiniz  
 - Görevlerin durumunu güncelleyerek tamamlandı olarak işaretleyebilirsiniz  
-- Görevler tarih ve önceliğe göre filtrelenebilir  
+- Bir takım içerisinde bulunabilir, görev alabilirsiniz. 
 
 ---
 
